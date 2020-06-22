@@ -2,7 +2,7 @@
 
 #include <QPainter>
 #include <QTime>
-//#include <QDebug>
+#include <QDebug>
 #include <QMessageBox>
 
 QLoginDialog::QLoginDialog(QWidget* parent) :
@@ -71,7 +71,8 @@ void QLoginDialog::LoginBtn_Clicked()
 {
     QString captcha = CaptEdit.text().replace(" ", "");
 
-    if( m_captcha.toLower() == captcha.toLower() )//不区分大小写
+    /* 不区分大小写 */
+    if( m_captcha.toLower() == captcha.toLower() )
     {
         m_user = UserEdit.text().trimmed();
         m_pwd = PwdEdit.text();
@@ -105,7 +106,7 @@ void QLoginDialog::LoginBtn_Clicked()
 }
 void QLoginDialog::RegisterBtn_Clicked()
 {
-
+    qDebug() << "RegisterBtn_Clicked";
 }
 void QLoginDialog::CancelBtn_Clicked()
 {
