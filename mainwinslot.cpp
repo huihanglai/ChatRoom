@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QDebug>
 
+
 /* 用来验证用户名是否正确 */
 static bool ValidateUserID(QString id)
 {
@@ -32,6 +33,7 @@ void MainWin::initMember()
     m_handlerMap.insert("MSGA", &MainWin::MSGA_handler);
     m_handlerMap.insert("USER", &MainWin::USER_handler);
     m_handlerMap.insert("CTRL", &MainWin::CTRL_handler);
+    m_handlerMap.insert("INSE", &MainWin::INSE_handler);
 }
 /* 重写eventFilter函数，实现按下回车发送 */
 bool MainWin::eventFilter(QObject* obj, QEvent* event)
@@ -97,13 +99,13 @@ void MainWin::logInOutBtnClinked()
     if(!m_client.isValid())
     {
         loginDlg.setValFunc(ValidateUserID);
-        if(loginDlg.exec() == QDialog::Accepted)
+        if(loginDlg.exec() == LOGIN)
         {
             QString usr = loginDlg.getUser().trimmed();
             QString pwd = loginDlg.getPwd().trimmed();
 
             /* 连接成功 */
-            if(m_client.connectTo("192.168.0.223",11112))
+            if(m_client.connectTo("103.46.128.45",22003))
             {
                 //setCtrlEnabled(true);
                 TextMessage msg("LGIN",usr + '\r' + pwd);
@@ -113,6 +115,24 @@ void MainWin::logInOutBtnClinked()
             else
             {
                 QMessageBox::critical(this, "失败", "连接不到远程服务端");
+                //m_client.close();
+            }
+        }
+        else if(loginDlg.exec() == REGISTER)
+        {
+            QString usr = loginDlg.getUser().trimmed();
+            QString pwd = loginDlg.getPwd().trimmed();
+            if(m_client.connectTo("192.168.0.123",22003))
+            {
+                //setCtrlEnabled(true);
+                TextMessage msg("REGI",usr + '\r' + pwd);
+                m_client.send(msg);
+            }
+            /* 连接不成功 */
+            else
+            {
+                QMessageBox::critical(this, "失败", "连接不到远程服务端");
+                //m_client.close();
             }
         }
     }
@@ -232,10 +252,22 @@ void MainWin::LIOK_handler(QTcpSocket&, TextMessage& message)
         inputGrpBx.setTitle(id);
     }
 }
-void MainWin::LIER_handler(QTcpSocket&, TextMessage&)
+void MainWin::LIER_handler(QTcpSocket&, TextMessage& message)
 {
-    QMessageBox::critical(this, "错误", "身份验证失败！");
-
+    QStringList rl = message.data().split("\r", QString::SkipEmptyParts);
+    int status = rl[0].toInt();
+    switch (status)
+    {
+        case LIER_HASLOGIN:
+            QMessageBox::critical(this, "错误", "已登录");
+            break;
+        case LIER_PWD_ERROR:
+            QMessageBox::critical(this, "错误", "密码错误");
+            break;
+        case LIER_NO_ACCOUNT:
+            QMessageBox::critical(this, "错误", "无此账号");
+            break;
+    }
     m_client.close();
 }
 void MainWin::USER_handler(QTcpSocket&, TextMessage& message)
@@ -305,4 +337,19 @@ void MainWin::CTRL_handler(QTcpSocket&, TextMessage& message)
         m_client.close();
     }
 
+}
+void MainWin::INSE_handler(QTcpSocket&, TextMessage& message)
+{
+    QStringList rl = message.data().split("\r",QString::SkipEmptyParts);
+    int status = rl[0].toInt();
+    qDebug() << status;
+    switch (status)
+    {
+        case INSERT_OK:
+             QMessageBox::information(this, "提示", "注册成功");
+             break;
+        case INSERT_ERROR:
+             QMessageBox::critical(this,"错误","账号已被注册");
+             break;
+    }
 }

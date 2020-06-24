@@ -35,6 +35,7 @@ SOURCES += \
         MainWin.cpp
 
 HEADERS += \
+        Definition.h \
         MainWin.h \
         QLoginDialog.h \
         TextMessage.h \

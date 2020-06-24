@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTimer>
+#include "Definition.h"
 
 class QLoginDialog : public QDialog
 {
@@ -45,6 +46,8 @@ public:
     QString getPwd();
     void setValFunc(ValFunc);
     ~QLoginDialog();
+private:
+    bool CheckIdAndPwd(int status);
 };
 
 

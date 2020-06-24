@@ -61,6 +61,8 @@ class MainWin : public QWidget, public TextMsgHandler
     void USER_handler(QTcpSocket&, TextMessage&);
     void MSGA_handler(QTcpSocket&, TextMessage&);
     void CTRL_handler(QTcpSocket&, TextMessage&);
+    void INSE_handler(QTcpSocket&, TextMessage&);
+
 private slots:
     void sendBtnClicked();
     void logInOutBtnClinked();
