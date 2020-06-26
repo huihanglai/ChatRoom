@@ -54,6 +54,9 @@ class MainWin : public QWidget, public TextMsgHandler
     /* 用来得到用户勾选用户ID */
     QString getCheckedUserId();
 
+    /* 发送用户名和密码用于登录与注册 */
+    void SendIdAndPwd(QString head);
+
     void CONN_handler(QTcpSocket&, TextMessage&);
     void DSCN_handler(QTcpSocket&, TextMessage&);
     void LIOK_handler(QTcpSocket&, TextMessage&);
@@ -62,7 +65,6 @@ class MainWin : public QWidget, public TextMsgHandler
     void MSGA_handler(QTcpSocket&, TextMessage&);
     void CTRL_handler(QTcpSocket&, TextMessage&);
     void INSE_handler(QTcpSocket&, TextMessage&);
-
 private slots:
     void sendBtnClicked();
     void logInOutBtnClinked();

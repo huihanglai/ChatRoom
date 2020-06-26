@@ -59,13 +59,14 @@ QLoginDialog::QLoginDialog(QWidget* parent) :
 
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(Timer_Timeout()));
     connect(&LoginBtn, SIGNAL(clicked()), this, SLOT(LoginBtn_Clicked()));
-    connect(&RegisterBtn, SIGNAL(clicked()), this, SLOT(RegisterBtn_Clicked()));
     connect(&CancelBtn, SIGNAL(clicked()), this, SLOT(CancelBtn_Clicked()));
+    connect(&RegisterBtn, SIGNAL(clicked()), this, SLOT(RegisterBtn_Clicked()));
 
     qsrand(QTime::currentTime().second() * 1000 + QTime::currentTime().msec());//种下种子
 
     m_timer.start(100);
 }
+
 bool QLoginDialog::CheckIdAndPwd(int status)
 {
     QString captcha = CaptEdit.text().replace(" ", "");
@@ -101,17 +102,20 @@ bool QLoginDialog::CheckIdAndPwd(int status)
         CaptEdit.selectAll();
     }
 }
+
 void QLoginDialog::LoginBtn_Clicked()
 {
     CheckIdAndPwd(LOGIN);
 }
+
 void QLoginDialog::RegisterBtn_Clicked()
 {
     CheckIdAndPwd(REGISTER);
 }
+
 void QLoginDialog::CancelBtn_Clicked()
 {
-    this->close();
+    done(CANCLE);
 }
 
 QString QLoginDialog::getUser()

@@ -1,2 +1,0 @@
-# ChatRoom
-Base on QT
